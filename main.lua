@@ -4,10 +4,11 @@
 --
 
 local AddonName = ...
-local Version, Build = GetBuildInfo()
 
 local mainFrame = CreateFrame("Frame", nil, UIParent)
 mainFrame.events = {}
+
+local Version, Build = GetBuildInfo()
 
 local function ArrayDifference(minuend, subtrahend)
 	local tempArray = {}
