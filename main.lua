@@ -31,7 +31,7 @@ local function ArrayDifference(minuend, subtrahend)
 		end
 	end
 
-	return difference
+	return difference, n
 end
 
 function mainFrame:SetupEvents()
@@ -47,20 +47,21 @@ end
 function mainFrame.events:ADDON_LOADED(addonName)
 	if addonName == AddonName then
 		WoWRamblerProjectQuestLog = WoWRamblerProjectQuestLog or {}
-		WoWRamblerProjectQuestMap = WoWRamblerProjectQuestMap or {}
+		WoWRamblerProjectHiddenQuests = WoWRamblerProjectHiddenQuests or {}
 		WoWRamblerProjectQuestsDone = WoWRamblerProjectQuestsDone or {}
 	end
 end
 
 function mainFrame:AddLogEntry(event, questId)
-	local y, x, z, instanceId = UnitPosition("player") -- First returned value is really the 'y' coordinate.
+	local y, x, z, instanceId = UnitPosition("player") -- First returned value really is the 'y' coordinate.
 	local mapX, mapY
 	local uiMapID = C_Map.GetBestMapForUnit("player")
 
 	if uiMapID then
 		local position = C_Map.GetPlayerMapPosition(uiMapID, "player")
 		if position then
-			mapX, mapY = position:GetXY()
+			mapX = position.x
+			mapY = position.y
 		end
 	end
 
@@ -88,20 +89,23 @@ end
 
 function mainFrame.events:QUEST_TURNED_IN(questId)
 	local serverQuests = C_QuestLog.GetAllCompletedQuestIDs()
-	local diff = ArrayDifference(serverQuests, WoWRamblerProjectQuestsDone)
+	
+	-- Make sure serverQuests contains the just completed quest.
+	table.insert(serverQuests, questId)
 
-	if next(diff) ~= nil then
-		WoWRamblerProjectQuestMap[questId] = {}
+	local diff, count = ArrayDifference(serverQuests, WoWRamblerProjectQuestsDone)
+	WoWRamblerProjectQuestsDone = serverQuests
+
+	if count > 1 then
+		-- Okay, there is at least one additional (hidden) quest completed.
+		WoWRamblerProjectHiddenQuests[questId] = {}
+	
 		for k, v in pairs(diff) do
-			-- Usually GetAllCompletedQuestIDs() does not return just completed quests. Usually...
 			if questId ~= v then
-				table.insert(WoWRamblerProjectQuestMap[questId], v)
+				table.insert(WoWRamblerProjectHiddenQuests[questId], v)
 			end
 		end
 	end
-
-	WoWRamblerProjectQuestsDone = serverQuests
-	table.insert(WoWRamblerProjectQuestsDone, questId)
 
 	self:AddLogEntry("QUEST_TURNED_IN", questId)
 end
