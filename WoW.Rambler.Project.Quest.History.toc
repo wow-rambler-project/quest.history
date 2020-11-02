@@ -3,6 +3,6 @@
 ## Notes: WoW Rambler Project Quest History Addon
 ## Version: 1.0
 
-## SavedVariablesPerCharacter: WoWRamblerProjectQuestLog, WoWRamblerProjectQuestsDone, WoWRamblerProjectQuestMap
+## SavedVariablesPerCharacter: WoWRamblerProjectQuestLog, WoWRamblerProjectQuestsDone, WoWRamblerProjectHiddenQuests
 
 main.lua
