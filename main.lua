@@ -10,7 +10,7 @@ mainFrame.events = {}
 
 local Version, Build = GetBuildInfo()
 
-local function ArrayDifference(minuend, subtrahend)
+local function ArrayUniqueDifference(minuend, subtrahend)
 	local tempArray = {}
 
 	for k, v in pairs(minuend) do
@@ -18,16 +18,16 @@ local function ArrayDifference(minuend, subtrahend)
 	end
 
 	for k, v in pairs(subtrahend) do
-		tempArray[v] = nil
+		tempArray[v] = false
 	end
 
 	local difference = {}
 	local n = 0
 
-	for k, v in pairs(minuend) do
-		if tempArray[v] then
+	for k, v in pairs(tempArray) do
+		if v then
 			n = n + 1
-			difference[n] = v
+			difference[n] = k
 		end
 	end
 
@@ -93,7 +93,7 @@ function mainFrame.events:QUEST_TURNED_IN(questId)
 	-- Make sure serverQuests contains the just completed quest.
 	table.insert(serverQuests, questId)
 
-	local diff, count = ArrayDifference(serverQuests, WoWRamblerProjectQuestsDone)
+	local diff, count = ArrayUniqueDifference(serverQuests, WoWRamblerProjectQuestsDone)
 	WoWRamblerProjectQuestsDone = serverQuests
 
 	if count > 1 then
