@@ -1,8 +1,8 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: WoW.Rambler.Project.Quest.History
 ## Notes: WoW Rambler Project Quest History Addon
-## Version: 1.0
+## Version: 1.1
 
-## SavedVariablesPerCharacter: WoWRamblerProjectQuestLog, WoWRamblerProjectQuestsDone, WoWRamblerProjectHiddenQuests
+## SavedVariablesPerCharacter: WoWRamblerProjectQuestLog, WoWRamblerProjectQuestsDone, WoWRamblerProjectHiddenQuests, WoWRamblerProjectQuestSnapshots
 
 main.lua
